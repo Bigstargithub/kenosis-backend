@@ -6,9 +6,11 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthCodeEntity } from 'src/entities/authCode.entity';
 import { UserEntity } from 'src/entities/user.entity';
+import { ApplyEntity } from 'src/entities/apply.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { join } from 'path';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { ApplyModule } from './apply/apply.module';
 
 @Module({
   imports: [
@@ -42,9 +44,10 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [AuthCodeEntity, UserEntity],
+      entities: [AuthCodeEntity, UserEntity, ApplyEntity],
       synchronize: false,
     }),
+    ApplyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

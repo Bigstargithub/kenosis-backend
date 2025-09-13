@@ -162,7 +162,7 @@ export class AuthService {
     try {
       const tokenService = new TokenService(this.jwtService);
       const token = tokenService.verifyToken(refreshToken);
-      return { status: 200, message: '토큰 갱신에 성공하였습니다.', token };
+      return { status: 200, message: '토큰 갱신에 성공하였습니다.', accessToken: token.token };
     } catch (error) {
       console.error(error);
       return { status: 400, message: '토큰 갱신에 실패하였습니다.' };
