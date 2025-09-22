@@ -15,8 +15,11 @@ export class ApplyEntity {
   @Column({ type: 'datetime' })
   end_date: Date;
 
-  @Column({ enum: ['pending', 'approved', 'rejected'] })
-  status: 'pending' | 'approved' | 'rejected';
+  @Column()
+  apply_status: string;
+
+  @Column()
+  room_number: string;
 
   @Column({ nullable: true })
   reject_reason: string;

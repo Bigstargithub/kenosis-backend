@@ -45,7 +45,7 @@ import { ApplyModule } from './apply/apply.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: [AuthCodeEntity, UserEntity, ApplyEntity],
-      synchronize: false,
+      synchronize: true,
     }),
     ApplyModule,
   ],

@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApplyEntity } from 'src/entities/apply.entity';
 import { In, LessThanOrEqual, MoreThanOrEqual, Not, Repository } from 'typeorm';
+import { dateFormat } from 'src/utils/date_format';
+import { APPLY_ROOL_LIST } from 'src/apply/apply.constant';
 
 @Injectable()
 export class ApplyService {
@@ -10,28 +12,22 @@ export class ApplyService {
     private readonly applyEntity: Repository<ApplyEntity>,
   ) {}
 
-  async availableEndDate(startDate: string) {
-    // '2025-09-10' 형식의 문자열을 안전하게 Date 객체로 변환하기 위해 split 사용
-    const [year, month, day] = startDate.split('-').map(Number);
-    const start = new Date(year, month - 1, day);
+  async availableRoomList(startDate: string, endDate: string) {
+    const start = dateFormat(startDate);
+    const end = dateFormat(endDate);
 
     const applyList = await this.applyEntity.find({
       where: {
+        start_date: MoreThanOrEqual(start),
         end_date: LessThanOrEqual(start),
-        status: Not(In(['rejected']))
+        apply_status: Not(In(['rejected'])),
       },
     });
 
+    const availableRoomList = APPLY_ROOL_LIST.filter(
+      (room) => !applyList.some((apply) => apply.room_number !== room),
+    );
 
-    let availableEndDateList = [];
-    
-    for (let i = 0; i < 31; i++) {
-      availableEndDateList.push(new Date(start.getTime() + (i + 1) * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
-    }
-
-    availableEndDateList = availableEndDateList.filter(date => !applyList.some(apply => {
-      return apply.end_date >= new Date(date);
-    }));
-    return {'status': 200, 'data': availableEndDateList};
+    return { status: 200, data: availableRoomList };
   }
 }

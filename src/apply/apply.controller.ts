@@ -5,10 +5,10 @@ import { ApplyService } from './apply.service';
 export class ApplyController {
   constructor(private readonly applyService: ApplyService) {}
 
-  @Get('availableEndDate')
-  availableEndDate(@Query() query: { start_date: string }) {
+  @Get('available-room')
+  availableEndDate(@Query() query: { start_date: string; end_date: string }) {
     const startDate = query.start_date;
-    return this.applyService.availableEndDate(startDate);
+    const endDate = query.end_date;
+    return this.applyService.availableRoomList(startDate, endDate);
   }
-
 }
